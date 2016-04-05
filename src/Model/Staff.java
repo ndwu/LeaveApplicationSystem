@@ -5,8 +5,6 @@ public class Staff{
 	 private int staffID;
 	   private String name;
 	   protected  Staff manager;
-	 //  public ArrayList<Staff> staffList = new ArrayList <Staff>();
-	//   public Staff d = new Director();
 	   
 	   public Staff(int s, String n, Staff m){
 	      staffID = s;

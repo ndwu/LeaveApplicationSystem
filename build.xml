@@ -75,7 +75,7 @@
               	<target name="jar" depends="build-project">
               		<jar destfile="${dist.dir}/leaveApplicationSystem.jar" basedir="${build.dir}">
               			<manifest>
-              				<attribute name="Main-Class" value="test.Main"/>
+              				<attribute name="Main-Class" value="UI.LeaveApplicationSystem"/>
               			</manifest>
               		</jar>
               	</target>
