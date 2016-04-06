@@ -13,6 +13,4 @@ public class Director extends Staff {
 	public String getDescription(){
 		  return this.getName()+ " is the Director";
 	   }
-
-	   
 }

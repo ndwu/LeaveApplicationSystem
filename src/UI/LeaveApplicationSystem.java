@@ -56,7 +56,7 @@ public class LeaveApplicationSystem {
  public static void main(String[] args) {
 			   new LeaveApplicationSystem();
 		   }
-	
+	//Adapter class
 	class ComboItem{
 	       private String name;
 	       private Staff staffObj;
@@ -271,6 +271,14 @@ public class LeaveApplicationSystem {
        	int selectedRowIndex = approveTable.getSelectedRow();
        	String selectedObject = (String) approveTable.getModel().getValueAt(selectedRowIndex, 0);
        	int selectedRequestID = Integer.parseInt(selectedObject);
+       	//look for requestID and set approve
+	       for (int i = 0; i < requestList.size(); i++){
+	    	   if(requestList.get(i).getRequestID() == selectedRequestID)
+	    		   requestList.get(i).setApprover(loginStaff.getManager());
+	    	   if(requestList.get(i).getRequestID() == selectedRequestID && loginStaff.getClass() == Director.class)
+	    	       requestList.get(i).setDirectorApproved(Boolean.TRUE);
+	       }
+       	
         //Leave Approve Table refresh
 	   	approveTableModel.setRowCount(0);
 	       for (int i = 0; i < requestList.size(); i++){
@@ -280,10 +288,6 @@ public class LeaveApplicationSystem {
 		    	String requester = requestList.get(i).getRequester().getName();
 	   	        String[] data = {id,from, to, requester};
 
-    	   if(requestList.get(i).getRequestID() == selectedRequestID)
-    		   requestList.get(i).setApprover(loginStaff.getManager());
-    	   if(requestList.get(i).getRequestID() == selectedRequestID && loginStaff.getClass() == Director.class)
-    	       requestList.get(i).setDirectorApproved(Boolean.TRUE);
     	   if(requestList.get(i).getApprover() == loginStaff && !requestList.get(i).getDecline() && !requestList.get(i).getDirectorApproved())
 	   	       approveTableModel.addRow(data);
 	       	} 	   
@@ -300,6 +304,12 @@ public class LeaveApplicationSystem {
        	int selectedRowIndex = approveTable.getSelectedRow();
        	String selectedObject = (String) approveTable.getModel().getValueAt(selectedRowIndex, 0);
        	int selectedRequestID = Integer.parseInt(selectedObject);
+       	//look for requestID and setDecline
+	       for (int i = 0; i < requestList.size(); i++){
+	    	   if(requestList.get(i).getRequestID() == selectedRequestID){
+	    		   requestList.get(i).setDecline(Boolean.TRUE);
+	           }	    	   
+	       }
         //Leave Approve Table refresh
 	   	approveTableModel.setRowCount(0);
 	       for (int i = 0; i < requestList.size(); i++){
@@ -308,10 +318,6 @@ public class LeaveApplicationSystem {
 		    	String to = dateFormat.format(requestList.get(i).getToDate());
 		    	String requester = requestList.get(i).getRequester().getName();
 	   	        String[] data = {id,from, to, requester};
-
-    	   if(requestList.get(i).getRequestID() == selectedRequestID){
-    		   requestList.get(i).setDecline(Boolean.TRUE);
-           }
     	   if(requestList.get(i).getApprover() == loginStaff && !requestList.get(i).getDecline() && !requestList.get(i).getDirectorApproved())
 	   	   approveTableModel.addRow(data);
 	       }
@@ -463,7 +469,6 @@ public class LeaveApplicationSystem {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
-		 LeaveRequest l = new LeaveRequest();
       	Object item = loginBox.getSelectedItem();
 		loginStaff = ((ComboItem)item).getSelectedStaff();
 		System.out.println(loginStaff.getName());
