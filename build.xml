@@ -73,7 +73,7 @@
               		</javadoc>
               	</target>
               	<target name="jar" depends="build-project">
-              		<jar destfile="${dist.dir}/leaveApplicationSystem.jar" basedir="${build.dir}">
+              		<jar destfile="${dist.dir}/project.jar" basedir="${build.dir}">
               			<manifest>
               				<attribute name="Main-Class" value="UI.LeaveApplicationSystem"/>
               			</manifest>

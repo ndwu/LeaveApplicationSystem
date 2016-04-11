@@ -304,6 +304,8 @@ public class LeaveApplicationSystem {
        	int selectedRowIndex = approveTable.getSelectedRow();
        	String selectedObject = (String) approveTable.getModel().getValueAt(selectedRowIndex, 0);
        	int selectedRequestID = Integer.parseInt(selectedObject);
+       	
+       	
        	//look for requestID and setDecline
 	       for (int i = 0; i < requestList.size(); i++){
 	    	   if(requestList.get(i).getRequestID() == selectedRequestID){
@@ -466,7 +468,6 @@ public class LeaveApplicationSystem {
        public LoginListener(JButton button) {
            this.button = button;
        }
-	@Override
 	public void actionPerformed(ActionEvent e) {
 		
       	Object item = loginBox.getSelectedItem();
