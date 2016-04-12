@@ -40,7 +40,7 @@ public class LeaveApplicationSystem {
 		   Staff d = new Director();
 	   
 		 /** leave request GUI object **/
-		   public ArrayList<LeaveRequest> requestList = new ArrayList <LeaveRequest>();
+		 //  public ArrayList<LeaveRequest> requestList = new ArrayList <LeaveRequest>();
 		   public JComboBox loginBox;
 		   private JButton loginButton, requestButton, approveButton, declineButton;
 		   private JTextField requestFromTF, requestToTF;
@@ -211,11 +211,11 @@ public class LeaveApplicationSystem {
        String[] approveColumnNames = {"Request ID","From", "To", "Requester"}; 
        approveTableModel = new DefaultTableModel(approveColumnNames, 0);
        
-       for (int i = 0; i < requestList.size(); i++){
-   		    String id = String.valueOf(requestList.get(i).getRequestID());
-	        String from = dateFormat.format(requestList.get(i).getFromDate());
-	    	String to = dateFormat.format(requestList.get(i).getToDate());
-	    	String requester = requestList.get(i).getRequester().getName();
+       for (int i = 0; i < LeaveRequest.requestList().size(); i++){
+   		    String id = String.valueOf(LeaveRequest.requestList().get(i).getRequestID());
+	        String from = dateFormat.format(LeaveRequest.requestList().get(i).getFromDate());
+	    	String to = dateFormat.format(LeaveRequest.requestList().get(i).getToDate());
+	    	String requester = LeaveRequest.requestList().get(i).getRequester().getName();
    	   String[] data = {id,from, to, requester};
    	   approveTableModel.addRow(data);
        	} 	   
@@ -271,24 +271,25 @@ public class LeaveApplicationSystem {
        	int selectedRowIndex = approveTable.getSelectedRow();
        	String selectedObject = (String) approveTable.getModel().getValueAt(selectedRowIndex, 0);
        	int selectedRequestID = Integer.parseInt(selectedObject);
-       	//look for requestID and set approve
-	       for (int i = 0; i < requestList.size(); i++){
-	    	   if(requestList.get(i).getRequestID() == selectedRequestID)
-	    		   requestList.get(i).setApprover(loginStaff.getManager());
-	    	   if(requestList.get(i).getRequestID() == selectedRequestID && loginStaff.getClass() == Director.class)
-	    	       requestList.get(i).setDirectorApproved(Boolean.TRUE);
+       	LeaveRequest lr = null;
+       	//lookup requestID
+	       for (int i = 0; i < LeaveRequest.requestList().size(); i++){
+	    	   if(LeaveRequest.requestList().get(i).getRequestID() == selectedRequestID)
+	    		   lr = LeaveRequest.requestList().get(i);
 	       }
-       	
+
+	       	loginStaff.approveLeave(lr);
+
         //Leave Approve Table refresh
 	   	approveTableModel.setRowCount(0);
-	       for (int i = 0; i < requestList.size(); i++){
-	   		    String id = String.valueOf(requestList.get(i).getRequestID());
-		        String from = dateFormat.format(requestList.get(i).getFromDate());
-		    	String to = dateFormat.format(requestList.get(i).getToDate());
-		    	String requester = requestList.get(i).getRequester().getName();
+	       for (int i = 0; i < LeaveRequest.requestList().size(); i++){
+	   		    String id = String.valueOf(LeaveRequest.requestList().get(i).getRequestID());
+		        String from = dateFormat.format(LeaveRequest.requestList().get(i).getFromDate());
+		    	String to = dateFormat.format(LeaveRequest.requestList().get(i).getToDate());
+		    	String requester = LeaveRequest.requestList().get(i).getRequester().getName();
 	   	        String[] data = {id,from, to, requester};
 
-    	   if(requestList.get(i).getApprover() == loginStaff && !requestList.get(i).getDecline() && !requestList.get(i).getDirectorApproved())
+    	   if(LeaveRequest.requestList().get(i).getApprover() == loginStaff && !LeaveRequest.requestList().get(i).getDecline() && !LeaveRequest.requestList().get(i).getDirectorApproved())
 	   	       approveTableModel.addRow(data);
 	       	} 	   
        }
@@ -304,23 +305,23 @@ public class LeaveApplicationSystem {
        	int selectedRowIndex = approveTable.getSelectedRow();
        	String selectedObject = (String) approveTable.getModel().getValueAt(selectedRowIndex, 0);
        	int selectedRequestID = Integer.parseInt(selectedObject);
-       	
-       	
-       	//look for requestID and setDecline
-	       for (int i = 0; i < requestList.size(); i++){
-	    	   if(requestList.get(i).getRequestID() == selectedRequestID){
-	    		   requestList.get(i).setDecline(Boolean.TRUE);
-	           }	    	   
+       	LeaveRequest lr = null;
+       	//lookup requestID
+       	for (int i = 0; i < LeaveRequest.requestList().size(); i++){
+	    	   if(LeaveRequest.requestList().get(i).getRequestID() == selectedRequestID)
+	    		   lr = LeaveRequest.requestList().get(i);	    	   
 	       }
+	       loginStaff.declineLeave(lr);
+	       
         //Leave Approve Table refresh
 	   	approveTableModel.setRowCount(0);
-	       for (int i = 0; i < requestList.size(); i++){
-	   		    String id = String.valueOf(requestList.get(i).getRequestID());
-		        String from = dateFormat.format(requestList.get(i).getFromDate());
-		    	String to = dateFormat.format(requestList.get(i).getToDate());
-		    	String requester = requestList.get(i).getRequester().getName();
+	       for (int i = 0; i < LeaveRequest.requestList().size(); i++){
+	   		    String id = String.valueOf(LeaveRequest.requestList().get(i).getRequestID());
+		        String from = dateFormat.format(LeaveRequest.requestList().get(i).getFromDate());
+		    	String to = dateFormat.format(LeaveRequest.requestList().get(i).getToDate());
+		    	String requester = LeaveRequest.requestList().get(i).getRequester().getName();
 	   	        String[] data = {id,from, to, requester};
-    	   if(requestList.get(i).getApprover() == loginStaff && !requestList.get(i).getDecline() && !requestList.get(i).getDirectorApproved())
+    	   if(LeaveRequest.requestList().get(i).getApprover() == loginStaff && !LeaveRequest.requestList().get(i).getDecline() && !LeaveRequest.requestList().get(i).getDirectorApproved())
 	   	   approveTableModel.addRow(data);
 	       }
        }
@@ -364,7 +365,7 @@ public class LeaveApplicationSystem {
 			 		 try { 
 				          toDate = dateFormat.parse(requestToTF.getText()); 
 				          lr.setToDate(toDate);
-							requestList.add(lr);
+				          LeaveRequest.requestList().add(lr);
 							requestCounter++;
 				      } catch (ParseException e2) { 
 				    	  JFrame msgframe = new JFrame();
@@ -377,19 +378,19 @@ public class LeaveApplicationSystem {
 			 
 			//refresh the table
 			requestTableModel.setRowCount(0);
-		   	for (int i = 0; i < requestList.size(); i++){
-		   		   String id = String.valueOf(requestList.get(i).getRequestID());
-		           String from = dateFormat.format(requestList.get(i).getFromDate());
-		    	   String to = dateFormat.format(requestList.get(i).getToDate());
+		   	for (int i = 0; i < LeaveRequest.requestList().size(); i++){
+		   		   String id = String.valueOf(LeaveRequest.requestList().get(i).getRequestID());
+		           String from = dateFormat.format(LeaveRequest.requestList().get(i).getFromDate());
+		    	   String to = dateFormat.format(LeaveRequest.requestList().get(i).getToDate());
 		    	   String status;
-		    	   if(requestList.get(i).getDecline())
+		    	   if(LeaveRequest.requestList().get(i).getDecline())
 		    		status = "declined";
-		    	   else if(!requestList.get(i).getDecline() && requestList.get(i).getDirectorApproved())
+		    	   else if(!LeaveRequest.requestList().get(i).getDecline() && LeaveRequest.requestList().get(i).getDirectorApproved())
 		    	    status = "Approved";
 		    	   else
-		    		status = "Pending (" + requestList.get(i).getApprover().getName() + ")";
+		    		status = "Pending (" + LeaveRequest.requestList().get(i).getApprover().getName() + ")";
 		    	   String[] data = {id, from, to,status};
-		    	   if(requestList.get(i).getRequester() == loginStaff){
+		    	   if(LeaveRequest.requestList().get(i).getRequester() == loginStaff){
 			    	   requestTableModel.addRow(data);
 			    	   }
 		        	}
@@ -481,32 +482,32 @@ public class LeaveApplicationSystem {
 		 
 //Leave Request Table refresh
 		requestTableModel.setRowCount(0);
-	   	for (int i = 0; i < requestList.size(); i++){
-	   		   String id = String.valueOf(requestList.get(i).getRequestID());
-	           String from = dateFormat.format(requestList.get(i).getFromDate());
-	    	   String to = dateFormat.format(requestList.get(i).getToDate());
+	   	for (int i = 0; i < LeaveRequest.requestList().size(); i++){
+	   		   String id = String.valueOf(LeaveRequest.requestList().get(i).getRequestID());
+	           String from = dateFormat.format(LeaveRequest.requestList().get(i).getFromDate());
+	    	   String to = dateFormat.format(LeaveRequest.requestList().get(i).getToDate());
 	    	   String status;
-	    	   if(requestList.get(i).getDecline())
-	    		status = "declined (" + requestList.get(i).getApprover().getName() + ")";
-	    	   else if(!requestList.get(i).getDecline() && requestList.get(i).getDirectorApproved())
+	    	   if(LeaveRequest.requestList().get(i).getDecline())
+	    		status = "declined (" + LeaveRequest.requestList().get(i).getApprover().getName() + ")";
+	    	   else if(!LeaveRequest.requestList().get(i).getDecline() && LeaveRequest.requestList().get(i).getDirectorApproved())
 	    	    status = "Approved";
 	    	   else
-	    		status = "Pending (" + requestList.get(i).getApprover().getName() + ")";
+	    		status = "Pending (" + LeaveRequest.requestList().get(i).getApprover().getName() + ")";
 	    	   String[] data = {id, from, to,status};
-	    	   if(requestList.get(i).getRequester() == loginStaff){
+	    	   if(LeaveRequest.requestList().get(i).getRequester() == loginStaff){
 		    	   requestTableModel.addRow(data);
 		    	   }
 	        	}
  
  //Leave Approve Table refresh
 	   	approveTableModel.setRowCount(0);
-	       for (int i = 0; i < requestList.size(); i++){
-	   		   String id = String.valueOf(requestList.get(i).getRequestID());
-		        String from = dateFormat.format(requestList.get(i).getFromDate());
-		    	String to = dateFormat.format(requestList.get(i).getToDate());
-		    	String requester = requestList.get(i).getRequester().getName();
+	       for (int i = 0; i < LeaveRequest.requestList().size(); i++){
+	   		   String id = String.valueOf(LeaveRequest.requestList().get(i).getRequestID());
+		        String from = dateFormat.format(LeaveRequest.requestList().get(i).getFromDate());
+		    	String to = dateFormat.format(LeaveRequest.requestList().get(i).getToDate());
+		    	String requester = LeaveRequest.requestList().get(i).getRequester().getName();
 	   	   String[] data = {id,from, to, requester};
-    	   if(requestList.get(i).getApprover() == loginStaff && !requestList.get(i).getDecline() && !requestList.get(i).getDirectorApproved())
+    	   if(LeaveRequest.requestList().get(i).getApprover() == loginStaff && !LeaveRequest.requestList().get(i).getDecline() && !LeaveRequest.requestList().get(i).getDirectorApproved())
 	   	   approveTableModel.addRow(data);
 	       	} 	   
 	   	

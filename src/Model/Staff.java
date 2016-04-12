@@ -12,6 +12,14 @@ public class Staff{
 	      manager = m;
 	   }
 
+    public void approveLeave(LeaveRequest lr){
+		   lr.setApprover(this.getManager());
+		       }
+    
+    public void declineLeave(LeaveRequest lr){
+		   lr.setDecline(Boolean.TRUE);
+}    
+	   
 	public Staff(String d) {
 		// TODO Auto-generated constructor stub
 	}

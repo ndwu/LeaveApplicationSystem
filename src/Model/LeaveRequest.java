@@ -1,4 +1,5 @@
 package Model;
+import java.util.ArrayList;
 import java.util.Date;
 public class LeaveRequest {
 	private int requestID;	
@@ -9,6 +10,14 @@ public class LeaveRequest {
 	private Boolean declined;
 	private Boolean directorApproved;
 
+	public static  ArrayList<LeaveRequest> requestList = new ArrayList <LeaveRequest>();
+	
+	   public static  ArrayList<LeaveRequest> requestList()
+	    {
+	        return requestList;
+	    }
+	   
+	
 	   public LeaveRequest (int id, Staff r, Staff a, Date f, Date t, Boolean d, Boolean da)
 	   {
 		   requestID = id;
@@ -92,5 +101,6 @@ public class LeaveRequest {
 			  return getRequester().getName() + " request leave from " + getFromDate() + " to " + getToDate() + " is approved by " + getApprover().getName() + " , now pending on " + approver.getManager().getName();
 		  
 	   }
-	   
+
+
 }
